@@ -6,12 +6,17 @@ typedef struct list List;
 List * list();
 void destroyList();
 
-void add(List * l, void * item);
-void * remove(List * l, int i);
+void listAdd(List * l, void * item);
+void listRemove(List * l, int i);
 
-void cleanList(List * l);
+void listClean(List * l);
 
 void push(List * l, void * item);
 void pop(List * l);
 
+void * getValue(List * l, int index);
+int getValueInt(List * l, int index);
+
 int length(List * l);
+
+void * * getAllList(List * l);

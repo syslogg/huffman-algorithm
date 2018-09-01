@@ -2,11 +2,14 @@
 #include <stdlib.h>
 
 #include "Tree.h"
+#include "List.h"
+#include "huffman.h"
 
-int main () {
+void main (){
     
-
-    
-    system("read -n 1 -s -p \"Press any key to continue...\"");
-    return 0;
+    compress("img.jpg");
+    printf("CACHE VAGABUNDO");
+    //system("read -n 1 -s -p \"Press any key to continue...\"");
+    //system("pause");
+    getchar();
 }

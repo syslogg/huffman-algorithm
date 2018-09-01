@@ -6,16 +6,19 @@
 typedef struct list List;
 typedef struct node Node;
 
+struct node {
+    void * b;
+    Node * next;
+};
+
 struct list {
     Node * first;
     Node * last;
     int len;
 };
 
-struct node {
-    void * b;
-    Node * next;
-};
+//Declaring
+Node * createNode(void * item);
 
 //Public
 List * list() {
@@ -29,12 +32,12 @@ List * list() {
 
 //Public
 void destroyList(List * l) {
-    cleanList(l);
+    listClean(l);
     free(l);
 }
 
 //Public
-void cleanList(List * l) {
+void listClean(List * l) {
     Node * aux = l->first;
     while (aux != NULL) {
         Node * aux2 = aux->next;
@@ -47,7 +50,7 @@ void cleanList(List * l) {
 }
 
 //Public
-void add(List * l, void * item) {
+void listAdd(List * l, void * item) {
     Node * newNode = createNode(item);
     
     if(l->first == NULL) {
@@ -61,7 +64,7 @@ void add(List * l, void * item) {
 }
 
 //Public
-void * remove(List * l, int i) {
+void listRemove(List * l, int i) {
     Node * aux = l->first;
     Node * prev = NULL;
 
@@ -85,23 +88,36 @@ void * remove(List * l, int i) {
         prev->next = aux->next;
     }
 
-    free(aux->b);
     free(aux);
     
     l->len--;
 }
 
 //Public
-void cleanList(List * l){
-    Node * aux = l->first;
-    while (aux != NULL) {
-        Node * next = aux->next;
-        free (aux);
-        aux = next;
-    }
-    l->first = NULL;
-    l->last = NULL;
-    l->len = 0;
+void * getValue(List * l, int index) {
+	if (index >= l->len){
+		printf("Error: Index passou do limite");
+		return NULL;	
+	}
+	
+	Node * aux = l->first;
+	int count = 0;
+	while (aux != NULL) {
+		if(index == count) {
+			return aux->b;
+		}
+		count++;
+		aux = aux->next;
+	}
+}
+
+//Public
+int getValueInt(List * l, int index) {
+	void * value = getValue(l,index);
+	if(value != NULL) {
+		return * (int *) value;
+	}
+	return -1;
 }
 
 //Public
@@ -129,6 +145,24 @@ int length(List * l) {
     return l->len;
 }
 
+//Public
+void * * getAllList(List * l) {
+	void * * listArray = (void * *) malloc(l->len * sizeof(struct node));
+	//void * listArray[l->len];
+	int i;
+	Node * aux = l->first;
+	for (i = 0; i < l->len; i++) {
+		listArray[i] = aux->b;
+		aux = aux->next;
+	}
+	return listArray;
+}
+
+//Public
+void * get(List * l, int i) {
+
+}
+
 //Private
 Node * createNode(void * item) {
     Node * n = (Node *) malloc(sizeof(struct node));
@@ -136,3 +170,10 @@ Node * createNode(void * item) {
     n->b = item;
     return n;
 }
+
+
+
+
+
+
+

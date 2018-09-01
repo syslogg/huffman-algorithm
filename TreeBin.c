@@ -24,15 +24,8 @@ Node * newNode(int info, void * b, Node * r, Node * l) {
 }
 
 //Public
-void rmNode(Node * root) {
-    if(root != NULL) {
-        Node * r = root->right;
-        Node * l = root->left;
-        free(root->b);
-        free(root);
-        cleanTree(r);
-        cleanTree(l);
-    }
+void * getBin(Node * n) {
+	return n->b;
 }
 
 //Public
@@ -59,9 +52,18 @@ Node * getLeft(Node * n) {
 void printInOrdem(Node * root) {
     if(root != NULL) {
         printInOrdem(root->left);
-        printf("%d ",root->info);
+        printf("%c ",root->info);
         printInOrdem(root->right);
     }
+}
+
+void cleanTree(Node * node) {
+	if(node != NULL) {
+		cleanTree(node->left);
+		cleanTree(node->right);
+		free(node->b);
+		free(node);
+	}
 }
 
 

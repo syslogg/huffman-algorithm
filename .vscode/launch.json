@@ -1,0 +1,60 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "(gdb) Launch",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/a.out",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": true,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
+            "name": "Launch",
+            "preLaunchTask": "build",
+            "type": "cppdbg",
+            "request": "launch",
+            "args": [],
+            "stopAtEntry": true,
+            "cwd": "${workspaceRoot}",
+            "environment": [],
+            "externalConsole": true,
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "logging": {
+                "engineLogging": false,
+                "trace": false
+            },
+            "windows": {
+                "program": "${workspaceRoot}/huffman.exe",
+                "MIMode": "gdb",
+                "miDebuggerPath": "C:\\Program Files (x86)\\Dev-Cpp\\MinGW64\\bin" // Path to gdb on windows
+            },
+            "linux": {
+                "program": "${workspaceRoot}/a.out",
+                "MIMode": "gdb"
+            },
+            "osx": {
+                "program": "${workspaceRoot}/a.out",
+                "MIMode": "lldb"
+            }
+        }
+
+    ]
+}
