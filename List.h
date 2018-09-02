@@ -20,3 +20,5 @@ int getValueInt(List * l, int index);
 int length(List * l);
 
 void * * getAllList(List * l);
+
+int interateList(List * l);

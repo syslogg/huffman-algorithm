@@ -7,7 +7,7 @@
 
 void main (){
     
-    compress("file.txt", "img.hzip");
+    compress("a.out", "compressed.txt");
     //system("read -n 1 -s -p \"Press any key to continue...\"");
     //system("pause");
     getchar();

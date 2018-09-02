@@ -29,7 +29,8 @@ struct frequency {
 Frequency getFrequency (void * freq);
 HuffmanNode getHuffmanNode (void * huff);
 void buildHoffmanTree(Node * * tree, List * listFq);
-void letterFrequency (FILE * file, List * list);
+int * letterFrequency (FILE * file, List * list);
+void letterFrequencyToList(int * list, List * l);
 Node * removeMinTree(List * l);
 List * transformNodeTree(List * listFreq);
 bool generateCode (Node * tree, Byte b, char * buffer, int size);
@@ -47,7 +48,7 @@ void compress(char fileIn[], char fileOut[]) {
 	
 	//Pegar frequencias
 	List * listFrequency = list();
-	letterFrequency(fileInF, listFrequency);
+	int * toFile = letterFrequency(fileInF, listFrequency);
 
 	//Montar Arvore
 	Node * tree;
@@ -66,27 +67,62 @@ void compress(char fileIn[], char fileOut[]) {
 		printf("Letter: %c | Code: %s \n",(char)f.letter, buffer);
 	}
 
-	/*while (fread(&b, 1,1, fileInF) >= 1) {
+	printf("\n\n\nExistem %d diferentes\n\n\n", length(listFrequency));
+
+	fwrite(toFile, 256, sizeof(toFile[0]), fileOutF);
+	fseek(fileOutF, sizeof(unsigned int), SEEK_CUR);
+
+	//Compress File
+	Byte c;
+	unsigned int size = 0;
+	Byte aux;
+
+	while(fread(&c,1,1,fileInF) >= 1) {
+
 		char buffer[1024] = {0};
+		generateCode(tree,c, buffer,0);
 
+		// Basicamente, converte o buffer binario em inteiro.
+		for (char *i = buffer; *i; i++){
 
-	}*/
+			if(*i == '1') {
+				aux = aux | (1 << (size % 8));
+			}
+			size++;
+
+			//Se formou 1 byte, Escreve no arquivo
+			if(size % 8 == 0) {
+				fwrite(&aux, 1,1,fileOutF);
+				aux = 0;
+			}
+
+			//printf("%c",*i);
+		}
+
+	}
+
+	fwrite(&aux, 1, 1, fileOutF);
+	fseek(fileOutF,256*sizeof(unsigned int),SEEK_SET);
+
+	fwrite(&size,1,sizeof(unsigned),fileOutF);
+
+	free(toFile);
 	printf("\n\n");
 	printInOrdem(tree);
-
-	
-	
 }
 
 //Public
 void decompress(char fileIn[], char fileOut[]) {
 	FILE * fileInF = fopen(fileIn, "rb");
-	//FILE * fileOut = fopen(file, "w");
+	FILE * fileOutF = fopen(fileOut, "wb");
 	
 	if(fileInF == NULL) {
 		printf("Error: Arquivo não existe");
 		return;
 	}
+
+
+
 }
 
 //Private
@@ -118,26 +154,30 @@ bool generateCode (Node * tree, Byte b, char * buffer, int size) {
 }
 
 //Private
-void letterFrequency (FILE * file, List * list) {
+int * letterFrequency (FILE * file, List * list) {
 	
 	Byte byte;
-	unsigned listByteTemp[256] = {0};
+	unsigned int * listByteTemp = (unsigned int *) malloc(256*sizeof(unsigned int));
 	
 	while (fread(&byte, 1, 1, file) >= 1) {
 		listByteTemp[byte]++;
 	}
 
+	letterFrequencyToList(listByteTemp, list);
+	rewind(file);
+	return listByteTemp;
+}
+
+void letterFrequencyToList(int * list, List * l) {
 	int i;
 	for (i = 0; i < 256; i++) {
-		if(listByteTemp[i] > 0) {
+		if(list[i] > 0) {
 			Frequency * fq = (Frequency *) malloc(sizeof(Frequency));
-			fq->frequency = listByteTemp[i];
+			fq->frequency = list[i];
 			fq->letter = i;
-			listAdd(list,fq);
+			listAdd(l,fq);
 		}
 	}
-	
-	rewind(file);
 }
 
 //Private
@@ -172,7 +212,7 @@ List * transformNodeTree(List * listFreq) {
 	for (i = 0; i < length(listFreq); i++) {
 		HuffmanNode * temp = (HuffmanNode *) malloc(sizeof(HuffmanNode));
 		temp->byte = getFrequency(listInArray[i]).letter;
-		temp->byte = getFrequency(listInArray[i]).letter;
+		temp->frequency = getFrequency(listInArray[i]).frequency;
 
 		listAdd(t,newNode((int)getFrequency(listInArray[i]).letter,temp,NULL,NULL));
 	}
@@ -194,7 +234,7 @@ Node * removeMinTree(List * l) {
 	int i, minFeq = INT_MAX, minIndex = -1;
 	void * * listInArray = getAllList(l);
 	for (i = 0; i < length(l); i++) {
-		HuffmanNode fq = getHuffmanNode(listInArray[i]);
+		HuffmanNode fq = getHuffmanNode(getBin(listInArray[i]));
 		if(minFeq > fq.frequency) {
 			minFeq = fq.frequency;
 			minIndex = i;
