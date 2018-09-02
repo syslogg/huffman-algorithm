@@ -1,6 +1,6 @@
 
 
 
-void decompress(char * pathFile);
+void decompress(char fileIn[], char fileOut[]);
 
-void compress(char * pathFile);
+void compress(char fileIn[], char fileOut[]);

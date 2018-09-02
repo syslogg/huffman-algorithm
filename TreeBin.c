@@ -3,6 +3,10 @@
 
 #include "Tree.h"
 
+#define bool int
+#define false 0
+#define true 1
+
 typedef struct node Node;
 
 struct node {
@@ -55,6 +59,11 @@ void printInOrdem(Node * root) {
         printf("%c ",root->info);
         printInOrdem(root->right);
     }
+}
+
+//Public
+bool isLeaf(Node * node) {
+    return node->left == NULL && node->right == NULL;
 }
 
 void cleanTree(Node * node) {

@@ -7,8 +7,7 @@
 
 void main (){
     
-    compress("img.jpg");
-    printf("CACHE VAGABUNDO");
+    compress("file.txt", "img.hzip");
     //system("read -n 1 -s -p \"Press any key to continue...\"");
     //system("pause");
     getchar();

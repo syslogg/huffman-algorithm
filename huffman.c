@@ -28,41 +28,92 @@ struct frequency {
 //Declaring
 Frequency getFrequency (void * freq);
 HuffmanNode getHuffmanNode (void * huff);
-void buildHoffmanTree(Node * tree, List * listFq);
+void buildHoffmanTree(Node * * tree, List * listFq);
 void letterFrequency (FILE * file, List * list);
 Node * removeMinTree(List * l);
 List * transformNodeTree(List * listFreq);
+bool generateCode (Node * tree, Byte b, char * buffer, int size);
 
 
 //Public
-void compress(char file[]) {
-	FILE * fileIn = fopen(file, "rb");
-	//FILE * fileOut = fopen(file, "wb");
+void compress(char fileIn[], char fileOut[]) {
+	FILE * fileInF = fopen(fileIn, "rb");
+	FILE * fileOutF = fopen(fileOut, "wb");
 	
-	if(fileIn == NULL) {
+	if(fileInF == NULL) {
 		printf("Error: Arquivo não existe");
 		return;
 	}
 	
 	//Pegar frequencias
 	List * listFrequency = list();
-	letterFrequency(fileIn, listFrequency);
+	letterFrequency(fileInF, listFrequency);
 
 	//Montar Arvore
 	Node * tree;
 
-	buildHoffmanTree(tree,listFrequency);
+	buildHoffmanTree(&tree,listFrequency);
+
+	Byte b;
+
+	void * * arrList = getAllList(listFrequency);
+	int i;
+
+	for (i = 0; i < length(listFrequency); i++) {
+		Frequency f = getFrequency(arrList[i]);
+		char buffer[1024] = {0};
+		generateCode(tree,f.letter, buffer,0);
+		printf("Letter: %c | Code: %s \n",(char)f.letter, buffer);
+	}
+
+	/*while (fread(&b, 1,1, fileInF) >= 1) {
+		char buffer[1024] = {0};
+
+
+	}*/
+	printf("\n\n");
+	printInOrdem(tree);
+
+	
 	
 }
 
 //Public
-void decompress(char file[]) {
-	FILE * fileIn = fopen(file, "rb");
+void decompress(char fileIn[], char fileOut[]) {
+	FILE * fileInF = fopen(fileIn, "rb");
 	//FILE * fileOut = fopen(file, "w");
 	
-	if(fileIn == NULL) {
+	if(fileInF == NULL) {
 		printf("Error: Arquivo não existe");
 		return;
+	}
+}
+
+//Private
+bool generateCode (Node * tree, Byte b, char * buffer, int size) {
+	HuffmanNode * node = (HuffmanNode *)getBin(tree);
+
+	if (isLeaf(tree) && node->byte == b) {
+		buffer[size] = '\0';
+		return true;
+	} else {
+		bool finded = false;
+
+		if(getLeft(tree) != NULL) {
+			buffer[size] = '0';
+			finded = generateCode(getLeft(tree), b, buffer, size+1);
+		}
+
+		if(getRight(tree) != NULL && !finded) {
+			buffer[size] = '1';
+			finded = generateCode(getRight(tree), b, buffer, size+1);
+		}
+
+		if(!finded) {
+			buffer[size] = '\0';
+		}
+
+		return finded;
 	}
 }
 
@@ -90,7 +141,7 @@ void letterFrequency (FILE * file, List * list) {
 }
 
 //Private
-void buildHoffmanTree(Node * tree, List * listFq) {
+void buildHoffmanTree(Node * * tree, List * listFq) {
 	List * listHuff = transformNodeTree(listFq);
 
 	while (length(listHuff) > 1) {
@@ -107,9 +158,9 @@ void buildHoffmanTree(Node * tree, List * listFq) {
 		listAdd(listHuff,nodeSum);
 
 	}
-	Node * root = (Node *) getValue(listHuff, 0);
-	//printf("LISTA: %d", length(listHuff));
-	printInOrdem(root);
+
+	*tree = (Node *) getValue(listHuff, 0);
+	destroyList(listHuff);
 }
 
 //Private
