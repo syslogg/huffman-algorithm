@@ -40,12 +40,12 @@ bool generateCode (Node * tree, Byte b, char * buffer, int size);
 void compress(char fileIn[], char fileOut[]) {
 	FILE * fileInF = fopen(fileIn, "rb");
 	FILE * fileOutF = fopen(fileOut, "wb");
-	
+
 	if(fileInF == NULL) {
 		printf("Error: Arquivo não existe");
 		return;
 	}
-	
+
 	//Pegar frequencias
 	List * listFrequency = list();
 	int * toFile = letterFrequency(fileInF, listFrequency);
@@ -81,9 +81,9 @@ void compress(char fileIn[], char fileOut[]) {
 
 		char buffer[1024] = {0};
 		generateCode(tree,c, buffer,0);
-
+        char * i;
 		// Basicamente, converte o buffer binario em inteiro.
-		for (char *i = buffer; *i; i++){
+		for (i = buffer; *i; i++){
 
 			if(*i == '1') {
 				aux = aux | (1 << (size % 8));
@@ -107,7 +107,11 @@ void compress(char fileIn[], char fileOut[]) {
 	fwrite(&size,1,sizeof(unsigned),fileOutF);
 
 	free(toFile);
+	close(fileOutF);
+	cloe(fileInF);
+
 	printf("\n\n");
+
 	printInOrdem(tree);
 }
 
@@ -115,13 +119,13 @@ void compress(char fileIn[], char fileOut[]) {
 void decompress(char fileIn[], char fileOut[]) {
 	FILE * fileInF = fopen(fileIn, "rb");
 	FILE * fileOutF = fopen(fileOut, "wb");
-	
+
 	if(fileInF == NULL) {
 		printf("Error: Arquivo não existe");
 		return;
 	}
 
-
+	
 
 }
 
@@ -155,10 +159,14 @@ bool generateCode (Node * tree, Byte b, char * buffer, int size) {
 
 //Private
 int * letterFrequency (FILE * file, List * list) {
-	
+	//TODO: Lembrar de dar free;
 	Byte byte;
 	unsigned int * listByteTemp = (unsigned int *) malloc(256*sizeof(unsigned int));
-	
+	int i;
+	for (i = 0; i < 256; i++) {
+		listByteTemp[i] = 0;
+	}
+
 	while (fread(&byte, 1, 1, file) >= 1) {
 		listByteTemp[byte]++;
 	}
@@ -189,7 +197,7 @@ void buildHoffmanTree(Node * * tree, List * listFq) {
 
 		Node * nodeDir = removeMinTree(listHuff);
 
-		HuffmanNode * sum = (HuffmanNode *) malloc(sizeof(HuffmanNode)); 
+		HuffmanNode * sum = (HuffmanNode *) malloc(sizeof(HuffmanNode));
 		sum->byte = '#';
 		sum->frequency = getHuffmanNode(getBin(nodeEsq)).frequency + getHuffmanNode(getBin(nodeDir)).frequency;
 

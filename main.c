@@ -6,9 +6,9 @@
 #include "huffman.h"
 
 void main (){
-    
-    compress("a.out", "compressed.txt");
+
+    compress("a.out", "a.out.ed2");
     //system("read -n 1 -s -p \"Press any key to continue...\"");
-    //system("pause");
-    getchar();
+    system("pause");
+    //getchar();
 }

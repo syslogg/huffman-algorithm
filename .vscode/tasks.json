@@ -17,7 +17,11 @@
                 "panel": "shared"
             },
             "windows": {
-                "command": "gcc -g main.c -o huffman.exe",
+                "command": "${workspaceRoot}/build.cmd",
+                "args": [
+                    "C:/MinGW/bin/",    // Path to the bin folder containing g++ to compile
+                    "huffman.exe"                               // Output executable name
+                ]
             },
             "linux": {
                 "command": "gcc",

@@ -44,7 +44,7 @@
             "windows": {
                 "program": "${workspaceRoot}/huffman.exe",
                 "MIMode": "gdb",
-                "miDebuggerPath": "C:\\Program Files (x86)\\Dev-Cpp\\MinGW64\\bin" // Path to gdb on windows
+                "miDebuggerPath": "C:/MinGW/bin/gdb.exe" // Path to gdb on windows
             },
             "linux": {
                 "program": "${workspaceRoot}/a.out",
