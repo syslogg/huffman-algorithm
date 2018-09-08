@@ -5,10 +5,13 @@
 #include "List.h"
 #include "huffman.h"
 
-void main (){
+int main (){
 
-    compress("a.out", "a.out.ed2");
+    compress("file.txt", "fileCompress.txt");
+    decompress("fileCompress.txt", "fileDescompress.txt");
     //system("read -n 1 -s -p \"Press any key to continue...\"");
-    system("pause");
-    //getchar();
+    //system("pause");
+    getchar();
+
+    return 0;
 }
