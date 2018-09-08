@@ -109,6 +109,8 @@ void * getValue(List * l, int index) {
 		count++;
 		aux = aux->next;
 	}
+
+    return NULL;
 }
 
 //Public
@@ -156,11 +158,6 @@ void * * getAllList(List * l) {
 		aux = aux->next;
 	}
 	return listArray;
-}
-
-//Public
-void * get(List * l, int i) {
-
 }
 
 //Private
