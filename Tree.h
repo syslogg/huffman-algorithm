@@ -6,7 +6,7 @@
 /* setting */
 typedef struct node Node;
 
-Node * newNode(int info, void * b, Node * r, Node * l);
+Node * newNode(int info, void * b, Node * l, Node * r);
 
 void setRight(Node * root, Node * n);
 void setLeft(Node * root, Node * n);

@@ -67,7 +67,7 @@ void compress(char fileIn[], char fileOut[]) {
 		Frequency f = getFrequency(arrList[i]);
 		char buffer[1024] = {0};
 		generateCode(tree,f.letter, buffer,0);
-		printf("Letter: %c | Code: %d \n",(char)f.letter, f.frequency);
+		printf("Letter: %c | Code: %s \n",(char)f.letter, buffer);
 	}
 
 	printf("\n\n\nExistem %d diferentes\n\n\n", length(listFrequency));
@@ -79,7 +79,7 @@ void compress(char fileIn[], char fileOut[]) {
 	//Compress File
 	Byte c;
 	unsigned int size = 0;
-	Byte aux;
+	Byte aux = 0;
 
 	while(fread(&c,1,1,fileInF) >= 1) {
 
@@ -92,6 +92,9 @@ void compress(char fileIn[], char fileOut[]) {
 			if(*i == '1') {
 				aux = aux | (1 << (size % 8));
 			}
+			if (*i == '0') {
+				aux = aux << 1;
+			}
 			size++;
 
 			//Se formou 1 byte, Escreve no arquivo
@@ -100,7 +103,7 @@ void compress(char fileIn[], char fileOut[]) {
 				aux = 0;
 			}
 
-			//printf("%c",*i);
+			printf("%c",*i);
 		}
 
 	}
@@ -142,10 +145,6 @@ void decompress(char fileIn[], char fileOut[]) {
 
 	Node * treeHoffman;
 	buildHoffmanTree(&treeHoffman,listFrequency);
-
-	
-	
-	
 
 	unsigned position = 0;
 
@@ -251,10 +250,7 @@ void buildHoffmanTree(Node * * tree, List * listFq) {
 
 	while (length(listHuff) > 1) {
 		Node * nodeDir = removeMinTree(listHuff);
-		
 		Node * nodeEsq = removeMinTree(listHuff);
-
-		
 
 		HuffmanNode * sum = (HuffmanNode *) malloc(sizeof(HuffmanNode));
 		sum->byte = '#';

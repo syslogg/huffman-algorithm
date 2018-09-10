@@ -6,7 +6,8 @@
 #include "huffman.h"
 
 int main (){
-
+    system("rm fileCompress.txt");
+    system("rm fileDescompress.txt");
     compress("file.txt", "fileCompress.txt");
     decompress("fileCompress.txt", "fileDescompress.txt");
     //system("read -n 1 -s -p \"Press any key to continue...\"");

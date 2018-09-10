@@ -17,7 +17,7 @@ struct node {
 };
 
 //Public
-Node * newNode(int info, void * b, Node * r, Node * l) {
+Node * newNode(int info, void * b, Node * l, Node * r) {
     Node * node = (Node *) malloc(sizeof(struct node));
     node->b = b;
     node->info = info;
