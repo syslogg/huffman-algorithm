@@ -6,10 +6,12 @@
 #include "huffman.h"
 
 int main (){
-    system("rm fileCompress.txt");
-    system("rm fileDescompress.txt");
-    compress("file.txt", "fileCompress.txt");
-    decompress("fileCompress.txt", "fileDescompress.txt");
+    //system("rm fileCompress.txt");
+    //system("rm fileDescompress.txt");
+
+    //compress("img.jpg", "fileCompress.txt");
+    decompress("fileCompress.txt", "img2.jpg");
+
     system("read -n 1 -s -p \"Press any key to continue...\"");
     //system("pause");
     //getchar();

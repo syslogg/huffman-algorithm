@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
+#include <string.h>
 
 #include "Tree.h"
 #include "List.h"
@@ -35,7 +36,7 @@ Node * removeMinTree(List * l);
 List * transformNodeTree(List * listFreq);
 bool generateCode (Node * tree, Byte b, char * buffer, int size);
 void frequencyArrayToListFreq (unsigned int * array, List * list);
-int generateBit (FILE * file, unsigned position, Byte * aux);
+int generateBit (FILE * file, unsigned position, unsigned size, Byte * aux);
 
 
 //Public
@@ -63,12 +64,12 @@ void compress(char fileIn[], char fileOut[]) {
 	int i;
 
 
-	/*for (i = 0; i < length(listFrequency); i++) {
+	for (i = 0; i < length(listFrequency); i++) {
 		Frequency f = getFrequency(arrList[i]);
 		char buffer[1024] = {0};
 		generateCode(tree,f.letter, buffer,0);
 		printf("Letter: %c | Code: %s \n",(char)f.letter, buffer);
-	}*/
+	}
 
 	printf("\n\n\nExistem %d diferentes\n\n\n", length(listFrequency));
 
@@ -80,21 +81,22 @@ void compress(char fileIn[], char fileOut[]) {
 	Byte c;
 	unsigned int size = 0;
 	Byte aux = 0;
+	char buffer[1024] = {0};//
+	char buffer2[8] = {0};
 
 	while(fread(&c,1,1,fileInF) >= 1) {
 
-		char buffer[1024] = {0};
+		//char buffer[1024] = {0};
 		generateCode(tree,c, buffer,0);
         char * i;
 		// Basicamente, converte o buffer binario em inteiro.
 		for (i = buffer; *i; i++){
 
+			aux <<= 1;
 			if(*i == '1') {
-				aux = aux | (1 << (size % 8));
+				aux |= 1;
 			}
-			if (*i == '0') {
-				aux = aux << 1;
-			}
+
 			size++;
 
 			//Se formou 1 byte, Escreve no arquivo
@@ -104,6 +106,13 @@ void compress(char fileIn[], char fileOut[]) {
 			}
 
 			printf("%c",*i);
+			if(size % 8 != 0) {
+				int e;
+				int miss = 8 - (size % 8);
+				for (e = 0; e < miss; e++) {
+
+				}
+			}
 		}
 
 	}
@@ -163,8 +172,8 @@ void decompress(char fileIn[], char fileOut[]) {
 		Node * nodeActual = treeHoffman;
 
 		while (!isLeaf(nodeActual)) {
-			int result = generateBit(fileInF,position++,&aux);
-			nodeActual =  result ? getLeft(nodeActual) : getRight(nodeActual);
+			int result = generateBit(fileInF,position++, size,&aux);
+			nodeActual =  result ?  getRight(nodeActual) : getLeft(nodeActual);
 		}
 		Byte write = getHuffmanNode(getBin(nodeActual)).byte;
 		
@@ -174,7 +183,7 @@ void decompress(char fileIn[], char fileOut[]) {
 }
 
 //Private
-int generateBit (FILE * file, unsigned position, Byte * aux) {
+int generateBit (FILE * file, unsigned position, unsigned size, Byte * aux) {
 	if (position % 8 == 0) {
 		fread(aux, 1, 1, file);
 	}
