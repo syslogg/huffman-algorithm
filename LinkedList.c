@@ -4,21 +4,21 @@
 #include "List.h"
 
 typedef struct list List;
-typedef struct node Node;
+typedef struct nodeList NodeList;
 
-struct node {
+struct nodeList {
     void * b;
-    Node * next;
+    NodeList * next;
 };
 
 struct list {
-    Node * first;
-    Node * last;
+    NodeList * first;
+    NodeList * last;
     int len;
 };
 
 //Declaring
-Node * createNode(void * item);
+NodeList * createNode(void * item);
 
 //Public
 List * list() {
@@ -38,9 +38,9 @@ void destroyList(List * l) {
 
 //Public
 void listClean(List * l) {
-    Node * aux = l->first;
+    NodeList * aux = l->first;
     while (aux != NULL) {
-        Node * aux2 = aux->next;
+        NodeList * aux2 = aux->next;
         free(aux);
         aux = aux2;
     }
@@ -51,7 +51,7 @@ void listClean(List * l) {
 
 //Public
 void listAdd(List * l, void * item) {
-    Node * newNode = createNode(item);
+    NodeList * newNode = createNode(item);
     
     if(l->first == NULL) {
         l->first = newNode;
@@ -65,8 +65,8 @@ void listAdd(List * l, void * item) {
 
 //Public
 void listRemove(List * l, int i) {
-    Node * aux = l->first;
-    Node * prev = NULL;
+    NodeList * aux = l->first;
+    NodeList * prev = NULL;
 
     if(i >= l->len) {
         printf("Error");
@@ -100,7 +100,7 @@ void * getValue(List * l, int index) {
 		return NULL;	
 	}
 	
-	Node * aux = l->first;
+	NodeList * aux = l->first;
 	int count = 0;
 	while (aux != NULL) {
 		if(index == count) {
@@ -124,7 +124,7 @@ int getValueInt(List * l, int index) {
 
 //Public
 void push(List * l, void * item) {
-    Node * newNode = createNode(item);
+    NodeList * newNode = createNode(item);
     l->last->next = newNode;
     l->last = newNode;
     l->len++;
@@ -132,8 +132,8 @@ void push(List * l, void * item) {
 
 //Public
 void pop(List * l) {
-    Node * aux = l->first;
-    Node * prev = NULL;
+    NodeList * aux = l->first;
+    NodeList * prev = NULL;
 
     while (aux->next != NULL) {
         prev = aux;
@@ -149,10 +149,10 @@ int length(List * l) {
 
 //Public
 void * * getAllList(List * l) {
-	void * * listArray = (void * *) malloc(l->len * sizeof(struct node));
+	void * * listArray = (void * *) malloc(l->len * sizeof(struct nodeList));
 	//void * listArray[l->len];
 	int i;
-	Node * aux = l->first;
+	NodeList * aux = l->first;
 	for (i = 0; i < l->len; i++) {
 		listArray[i] = aux->b;
 		aux = aux->next;
@@ -161,8 +161,8 @@ void * * getAllList(List * l) {
 }
 
 //Private
-Node * createNode(void * item) {
-    Node * n = (Node *) malloc(sizeof(struct node));
+NodeList * createNode(void * item) {
+    NodeList * n = (NodeList *) malloc(sizeof(struct nodeList));
     n->next = NULL;
     n->b = item;
     return n;

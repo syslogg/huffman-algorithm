@@ -10,9 +10,9 @@ int main (){
     system("rm fileDescompress.txt");
     compress("file.txt", "fileCompress.txt");
     decompress("fileCompress.txt", "fileDescompress.txt");
-    //system("read -n 1 -s -p \"Press any key to continue...\"");
+    system("read -n 1 -s -p \"Press any key to continue...\"");
     //system("pause");
-    getchar();
+    //getchar();
 
     return 0;
 }

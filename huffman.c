@@ -63,12 +63,12 @@ void compress(char fileIn[], char fileOut[]) {
 	int i;
 
 
-	for (i = 0; i < length(listFrequency); i++) {
+	/*for (i = 0; i < length(listFrequency); i++) {
 		Frequency f = getFrequency(arrList[i]);
 		char buffer[1024] = {0};
 		generateCode(tree,f.letter, buffer,0);
 		printf("Letter: %c | Code: %s \n",(char)f.letter, buffer);
-	}
+	}*/
 
 	printf("\n\n\nExistem %d diferentes\n\n\n", length(listFrequency));
 
@@ -145,6 +145,15 @@ void decompress(char fileIn[], char fileOut[]) {
 
 	Node * treeHoffman;
 	buildHoffmanTree(&treeHoffman,listFrequency);
+	
+	void * * arrList = getAllList(listFrequency);
+	int i;
+	for (i = 0; i < length(listFrequency); i++) {
+		Frequency f = getFrequency(arrList[i]);
+		char buffer[1024] = {0};
+		generateCode(treeHoffman,f.letter, buffer,0);
+		printf("Letter: %c | Code: %s \n",(char)f.letter, buffer);
+	}
 
 	unsigned position = 0;
 
@@ -169,7 +178,7 @@ int generateBit (FILE * file, unsigned position, Byte * aux) {
 	if (position % 8 == 0) {
 		fread(aux, 1, 1, file);
 	}
-	return !!((*aux) & (1 << (position % 8)));
+	return !!((*aux) & (1 << (7-(position % 8))));
 }
 
 //Private
@@ -190,7 +199,7 @@ bool generateCode (Node * tree, Byte b, char * buffer, int size) {
 		if(getRight(tree) != NULL && !finded) {
 			buffer[size] = '1';
 			finded = generateCode(getRight(tree), b, buffer, size+1);
-		}
+		} 
 
 		if(!finded) {
 			buffer[size] = '\0';
