@@ -9,8 +9,8 @@ int main (){
     //system("rm fileCompress.txt");
     //system("rm fileDescompress.txt");
 
-    compress("tests/img.jpg", "img.ed2");
-    decompress("img.ed2", "imgDescompress.jpg");
+    compress("tests/file.txt", "fileCompress.ed2");
+    decompress("fileCompress.ed2", "fileDescompress.txt");
 
     //system("read -n 1 -s -p \"Press any key to continue...\"");
     system("pause");

@@ -37,17 +37,20 @@ List * transformNodeTree(List * listFreq);
 bool generateCode (Node * tree, Byte b, char * buffer, int size);
 void frequencyArrayToListFreq (unsigned int * array, List * list);
 int generateBit (FILE * file, unsigned position, unsigned size, Byte * aux);
+void orderByFrequency(List * listFq);
 
 
 //Public
 void compress(char fileIn[], char fileOut[]) {
 	FILE * fileInF = fopen(fileIn, "rb");
-	FILE * fileOutF = fopen(fileOut, "wb");
 
 	if(fileInF == NULL) {
-		printf("Error: Arquivo não existe");
+		printf("\n\nError: Arquivo não existe\n\n");
 		return;
 	}
+
+	FILE * fileOutF = fopen(fileOut, "wb");
+	FILE * fileCode = fopen("out/code.txt","w");
 
 	//Pegar frequencias
 	List * listFrequency = list();
@@ -60,18 +63,19 @@ void compress(char fileIn[], char fileOut[]) {
 
 	Byte b;
 
-	void * * arrList = getAllList(listFrequency);
 	int i;
 
+	orderByFrequency(listFrequency);
+	void * * arrList = getAllList(listFrequency);
 
 	for (i = 0; i < length(listFrequency); i++) {
 		Frequency f = getFrequency(arrList[i]);
 		char buffer[1024] = {0};
 		generateCode(tree,f.letter, buffer,0);
-		printf("Letter: %c | Code: %s \n",(char)f.letter, buffer);
+		fprintf(fileCode, "%d - %c (%d): %s\n", i, (char)f.letter, f.frequency, buffer);
 	}
 
-	printf("\n\n\nExistem %d diferentes\n\n\n", length(listFrequency));
+	//printf("\n\n\nExistem %d diferentes\n\n\n", length(listFrequency));
 
 
 	fseek(fileOutF, sizeof(unsigned int), SEEK_CUR);
@@ -81,12 +85,11 @@ void compress(char fileIn[], char fileOut[]) {
 	Byte c;
 	unsigned int size = 0;
 	Byte aux = 0;
-	char buffer[1024] = {0};//
+	char buffer[1024] = {0};
 	char restByte[8] = {0};
 
 	while(fread(&c,1,1,fileInF) >= 1) {
 
-		//char buffer[1024] = {0};
 		generateCode(tree,c, buffer,0);
         char * i;
 		// Basicamente, converte o buffer binario em inteiro.
@@ -146,6 +149,7 @@ void compress(char fileIn[], char fileOut[]) {
 	free(toFile);
 	fclose(fileOutF);
 	fclose(fileInF);
+	fclose(fileCode);
 
 	printf("\n\n");
 
@@ -155,12 +159,13 @@ void compress(char fileIn[], char fileOut[]) {
 //Public
 void decompress(char fileIn[], char fileOut[]) {
 	FILE * fileInF = fopen(fileIn, "rb");
-	FILE * fileOutF = fopen(fileOut, "wb");
 
 	if(fileInF == NULL) {
-		printf("Error: Arquivo não existe");
+		printf("\n\nError: Arquivo nao existe\n\n");
 		return;
 	}
+
+	FILE * fileOutF = fopen(fileOut, "wb");
 
 	unsigned listBytes [256] = {0};
 	unsigned int size;
@@ -175,14 +180,14 @@ void decompress(char fileIn[], char fileOut[]) {
 	Node * treeHoffman;
 	buildHoffmanTree(&treeHoffman,listFrequency);
 	
-	void * * arrList = getAllList(listFrequency);
+	/*void * * arrList = getAllList(listFrequency);
 	int i;
 	for (i = 0; i < length(listFrequency); i++) {
 		Frequency f = getFrequency(arrList[i]);
 		char buffer[1024] = {0};
 		generateCode(treeHoffman,f.letter, buffer,0);
-		printf("Letter: %c | Code: %s \n",(char)f.letter, buffer);
-	}
+		
+	}*/
 
 	unsigned position = 0;
 
@@ -304,6 +309,23 @@ void buildHoffmanTree(Node * * tree, List * listFq) {
 
 	*tree = (Node *) getValue(listHuff, 0);
 	destroyList(listHuff);
+}
+
+void orderByFrequency(List * listFq) {
+	//Ordenacao usando BubbleSort
+	int i,n;
+	void * aux;
+	for (i = 0; i < length(listFq); i++){
+		for (n = 0; n < length(listFq) -1; n++) {
+			if(getFrequency(getValue(listFq,n)).frequency < getFrequency(getValue(listFq,n+1)).frequency) {
+				aux = getValue(listFq,n);
+				setItem(listFq, n, getValue(listFq,n+1));
+				setItem(listFq,n+1, aux);
+			}
+		}
+
+	}
+
 }
 
 //Private

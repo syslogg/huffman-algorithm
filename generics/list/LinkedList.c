@@ -94,6 +94,28 @@ void listRemove(List * l, int i) {
 }
 
 //Public
+void setItem(List * l, int i, void * item) {
+    if (i >= l->len){
+		printf("Error: Index passou do limite");
+		return;	
+	}
+
+    int count = 0;
+
+    if(l != NULL) {
+        NodeList * aux = l->first;
+        while (aux != NULL) {
+		if(i == count) {
+			aux->b = item;
+		}
+		count++;
+		aux = aux->next;
+	}
+
+    }
+}
+
+//Public
 void * getValue(List * l, int index) {
 	if (index >= l->len){
 		printf("Error: Index passou do limite");

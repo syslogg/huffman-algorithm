@@ -9,6 +9,8 @@ void destroyList();
 void listAdd(List * l, void * item);
 void listRemove(List * l, int i);
 
+void setItem(List * l, int i, void * item);
+
 void listClean(List * l);
 
 void push(List * l, void * item);
