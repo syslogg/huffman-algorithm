@@ -41,6 +41,7 @@ void listClean(List * l) {
     NodeList * aux = l->first;
     while (aux != NULL) {
         NodeList * aux2 = aux->next;
+        free(aux->b);
         free(aux);
         aux = aux2;
     }

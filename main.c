@@ -10,6 +10,7 @@ int main (){
     //system("rm fileDescompress.txt");
 
     compress("tests/file.txt", "fileCompress.ed2");
+    
     decompress("fileCompress.ed2", "fileDescompress.txt");
 
     //system("read -n 1 -s -p \"Press any key to continue...\"");

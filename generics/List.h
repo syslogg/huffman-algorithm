@@ -4,7 +4,7 @@
 typedef struct list List;
 
 List * list();
-void destroyList();
+void destroyList(List * l);
 
 void listAdd(List * l, void * item);
 void listRemove(List * l, int i);

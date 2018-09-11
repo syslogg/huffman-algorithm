@@ -62,21 +62,18 @@ void compress(char fileIn[], char fileOut[]) {
 	buildHoffmanTree(&tree,listFrequency);
 
 	Byte b;
-
 	int i;
 
 	orderByFrequency(listFrequency);
 	void * * arrList = getAllList(listFrequency);
 
+	//Escreve no arquivo Code
 	for (i = 0; i < length(listFrequency); i++) {
 		Frequency f = getFrequency(arrList[i]);
 		char buffer[1024] = {0};
 		generateCode(tree,f.letter, buffer,0);
 		fprintf(fileCode, "%d - %c (%d): %s\n", i, (char)f.letter, f.frequency, buffer);
 	}
-
-	//printf("\n\n\nExistem %d diferentes\n\n\n", length(listFrequency));
-
 
 	fseek(fileOutF, sizeof(unsigned int), SEEK_CUR);
 	fwrite(toFile, 256, sizeof(toFile[0]), fileOutF);
@@ -118,7 +115,7 @@ void compress(char fileIn[], char fileOut[]) {
 
 	}
 
-	
+	//Trata o ultimo Byte complentando com '1'
 	if(size % 8 != 0) {
 		char rest[9] = {'\0'};
 		int i;
@@ -140,20 +137,19 @@ void compress(char fileIn[], char fileOut[]) {
 		fwrite(&restByteF, 1, 1, fileOutF);
  	}
 
-	 
-
 	fseek(fileOutF,0,SEEK_SET);
-
 	fwrite(&size,1,sizeof(unsigned),fileOutF);
 
-	free(toFile);
+	//Fecha os arquivos
 	fclose(fileOutF);
 	fclose(fileInF);
 	fclose(fileCode);
 
-	printf("\n\n");
-
-	printInOrdem(tree);
+	//Limpa as variaveis
+	destroyList(listFrequency);
+	cleanTree(tree);
+	free(arrList);
+	free(toFile);
 }
 
 //Public
@@ -179,15 +175,6 @@ void decompress(char fileIn[], char fileOut[]) {
 
 	Node * treeHoffman;
 	buildHoffmanTree(&treeHoffman,listFrequency);
-	
-	/*void * * arrList = getAllList(listFrequency);
-	int i;
-	for (i = 0; i < length(listFrequency); i++) {
-		Frequency f = getFrequency(arrList[i]);
-		char buffer[1024] = {0};
-		generateCode(treeHoffman,f.letter, buffer,0);
-		
-	}*/
 
 	unsigned position = 0;
 
@@ -308,6 +295,7 @@ void buildHoffmanTree(Node * * tree, List * listFq) {
 	}
 
 	*tree = (Node *) getValue(listHuff, 0);
+	setItem(listHuff,0,NULL);
 	destroyList(listHuff);
 }
 
