@@ -38,15 +38,16 @@ bool generateCode (Node * tree, Byte b, char * buffer, int size);
 void frequencyArrayToListFreq (unsigned int * array, List * list);
 int generateBit (FILE * file, unsigned position, unsigned size, Byte * aux);
 void orderByFrequency(List * listFq);
+void printListInFileCode(Node * tree,List * listFq, FILE * file);
 
 
 //Public
-void compress(char fileIn[], char fileOut[]) {
+bool compress(char fileIn[], char fileOut[]) {
 	FILE * fileInF = fopen(fileIn, "rb");
 
 	if(fileInF == NULL) {
 		printf("\n\nError: Arquivo não existe\n\n");
-		return;
+		return false;
 	}
 
 	FILE * fileOutF = fopen(fileOut, "wb");
@@ -62,18 +63,9 @@ void compress(char fileIn[], char fileOut[]) {
 	buildHoffmanTree(&tree,listFrequency);
 
 	Byte b;
-	int i;
-
-	orderByFrequency(listFrequency);
-	void * * arrList = getAllList(listFrequency);
-
+	
 	//Escreve no arquivo Code
-	for (i = 0; i < length(listFrequency); i++) {
-		Frequency f = getFrequency(arrList[i]);
-		char buffer[1024] = {0};
-		generateCode(tree,f.letter, buffer,0);
-		fprintf(fileCode, "%d - %c (%d): %s\n", i, (char)f.letter, f.frequency, buffer);
-	}
+	printListInFileCode(tree,listFrequency,fileCode);
 
 	fseek(fileOutF, sizeof(unsigned int), SEEK_CUR);
 	fwrite(toFile, 256, sizeof(toFile[0]), fileOutF);
@@ -148,17 +140,18 @@ void compress(char fileIn[], char fileOut[]) {
 	//Limpa as variaveis
 	destroyList(listFrequency);
 	cleanTree(tree);
-	free(arrList);
 	free(toFile);
+
+	return true;
 }
 
 //Public
-void decompress(char fileIn[], char fileOut[]) {
+bool decompress(char fileIn[], char fileOut[]) {
 	FILE * fileInF = fopen(fileIn, "rb");
 
 	if(fileInF == NULL) {
 		printf("\n\nError: Arquivo nao existe\n\n");
-		return;
+		return false;
 	}
 
 	FILE * fileOutF = fopen(fileOut, "wb");
@@ -193,7 +186,23 @@ void decompress(char fileIn[], char fileOut[]) {
 	}
 	fclose(fileOutF);
 	fclose(fileInF);
+	destroyList(listFrequency);
+	cleanTree(treeHoffman);
 
+	return true;
+}
+
+//Private
+void printListInFileCode(Node * tree,List * listFq, FILE * file) {
+	int i;
+	orderByFrequency(listFq);
+	void * * arrList = getAllList(listFq);
+	for (i = 0; i < length(listFq); i++) {
+		Frequency f = getFrequency(arrList[i]);
+		char buffer[1024] = {0};
+		generateCode(tree,f.letter, buffer,0);
+		fprintf(file, "%d - %c (%d): %s\n", i, (char)f.letter, f.frequency, buffer);
+	}
 }
 
 //Private
