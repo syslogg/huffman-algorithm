@@ -35,10 +35,15 @@
             "osx": {
                 "command": "gcc",
                 "args": [
-                    "-g",
-                    "*.c",
-                    "-o",
-                    "a.out"
+                    "-g3",
+                    "main.c",
+                    "generics/List.h",
+                    "generics/Tree.h",
+                    "generics/list/LinkedList.c",
+                    "generics/tree/TreeBin.c",
+                    "huffman/huffman.c",
+                    "huffman/huffman.h"
+                    
                 ]
             }
         }
