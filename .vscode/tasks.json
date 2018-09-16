@@ -27,7 +27,13 @@
                 "command": "gcc",
                 "args": [
                     "-g",
-                    "*.c",
+                    "main.c",
+                    "generics/List.h",
+                    "generics/Tree.h",
+                    "generics/list/LinkedList.c",
+                    "generics/tree/TreeBin.c",
+                    "huffman/huffman.c",
+                    "huffman/huffman.h",
                     "-o",
                     "a.out"
                 ]

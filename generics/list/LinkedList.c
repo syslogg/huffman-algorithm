@@ -41,7 +41,7 @@ void listClean(List * l) {
     NodeList * aux = l->first;
     while (aux != NULL) {
         NodeList * aux2 = aux->next;
-        free(aux->b);
+        //free(aux->b);
         free(aux);
         aux = aux2;
     }
@@ -146,11 +146,17 @@ int getValueInt(List * l, int index) {
 }
 
 //Public
+char * getValueStr(List * l, int index) {
+    void * value = getValue(l,index);
+	if(value != NULL) {
+		return (char *) value;
+	}
+	return "";
+}
+
+//Public
 void push(List * l, void * item) {
-    NodeList * newNode = createNode(item);
-    l->last->next = newNode;
-    l->last = newNode;
-    l->len++;
+    listAdd(l,item);
 }
 
 //Public
@@ -163,6 +169,7 @@ void pop(List * l) {
         aux = aux->next;
     }
     free(aux);
+    l->last = prev;
 }
 
 //Public

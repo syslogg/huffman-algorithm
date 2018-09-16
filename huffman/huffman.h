@@ -4,4 +4,4 @@
 
 bool decompress(char fileIn[], char fileOut[]);
 
-bool compress(char fileIn[], char fileOut[]);
+bool compress(char fileIn[], char fileOut[], double * sizeIn, double * sizeOut);

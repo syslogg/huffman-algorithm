@@ -42,7 +42,7 @@ void printListInFileCode(Node * tree,List * listFq, FILE * file);
 
 
 //Public
-bool compress(char fileIn[], char fileOut[]) {
+bool compress(char fileIn[], char fileOut[], double * sizeIn, double * sizeOut) {
 	FILE * fileInF = fopen(fileIn, "rb");
 
 	if(fileInF == NULL) {
@@ -131,6 +131,12 @@ bool compress(char fileIn[], char fileOut[]) {
 
 	fseek(fileOutF,0,SEEK_SET);
 	fwrite(&size,1,sizeof(unsigned),fileOutF);
+
+	fseek(fileInF, 0, SEEK_END);
+	fseek(fileOutF, 0, SEEK_END);
+
+	*sizeIn = ftell(fileInF);
+	*sizeOut = ftell(fileOutF);
 
 	//Fecha os arquivos
 	fclose(fileOutF);
