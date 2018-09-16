@@ -70,7 +70,7 @@ void cleanTree(Node * node) {
 	if(node != NULL) {
 		cleanTree(node->left);
 		cleanTree(node->right);
-		free(node->b);
+		//free(node->b);
 		free(node);
 	}
 }

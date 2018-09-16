@@ -24,15 +24,7 @@ bool is_dir(const char* path);
 void orderByDirectory(List * listDir);
 
 int main (){
-    //system("rm fileCompress.txt");
-    //system("rm fileDescompress.txt");
-    //double size, sizeOut;
-    //compress("tests/file.txt", "fileCompress.ed2",&size, &sizeOut);
-
-    //decompress("fileCompress.ed2", "fileDescompress.txt");
     console(true);
-    //system("read -n 1 -s -p \"Press any key to continue...\"");
-    //system("pause");
     getchar();
 
     return 0;
@@ -74,9 +66,13 @@ void command(char * cmd) {
         free(file);
     } else if (sscanf(cmd,"decompress %s",params[0]) > 0) {
         clear();
-        char fileName[500];
+        char fileName[500], format[8] = FORMAT;
         strcpy(fileName, params[0]);
-        fileName[strlen(params[0])-strlen(FORMAT)-1] = '\n';
+        fileName[strlen(params[0])-strlen(format)] = '\0';
+        if(decompress(params[0], fileName) == true) {
+            printf("Arquivo descompactado com sucesso!!!\n");
+            printf("Arquivo: %s\n", fileName);
+        }
         
     } else if(!strcmp(cmd,"decompress")) {
         clear();
@@ -104,7 +100,7 @@ char * chooseFile(char * directory, bool filter) {
     int i = 1;
 
     while (( lsdir = readdir(dir) ) != NULL) {
-        if(!(!strcmp(lsdir->d_name,".") || !strcmp(lsdir->d_name,".."))){
+        if(!(!strcmp(lsdir->d_name, ".") || !strcmp(lsdir->d_name,".."))){
 
             if(filter == true) {
                 char temp[100];
@@ -131,6 +127,8 @@ char * chooseFile(char * directory, bool filter) {
 
         }
     }
+
+    closedir(dir);
 
     orderByDirectory(directoriesActual);
 

@@ -39,6 +39,7 @@ void frequencyArrayToListFreq (unsigned int * array, List * list);
 int generateBit (FILE * file, unsigned position, unsigned size, Byte * aux);
 void orderByFrequency(List * listFq);
 void printListInFileCode(Node * tree,List * listFq, FILE * file);
+char * byteToBinary(int x);
 
 
 //Public
@@ -198,6 +199,20 @@ bool decompress(char fileIn[], char fileOut[]) {
 	return true;
 }
 
+char * byteToBinary(int x) {
+    char b[9];
+    b[0] = '\0';
+
+    int z;
+    for (z = 128; z > 0; z >>= 1)
+    {
+        strcat(b, ((x & z) == z) ? "1" : "0");
+    }
+	char * str;
+	strcpy(str,b);
+    return str;
+}
+
 //Private
 void printListInFileCode(Node * tree,List * listFq, FILE * file) {
 	int i;
@@ -206,8 +221,9 @@ void printListInFileCode(Node * tree,List * listFq, FILE * file) {
 	for (i = 0; i < length(listFq); i++) {
 		Frequency f = getFrequency(arrList[i]);
 		char buffer[1024] = {0};
+
 		generateCode(tree,f.letter, buffer,0);
-		fprintf(file, "%d - %c (%d): %s\n", i, (char)f.letter, f.frequency, buffer);
+		fprintf(file, "%d - %s (%d): %s\n", i, byteToBinary((int)f.letter), f.frequency, buffer);
 	}
 }
 
@@ -320,7 +336,7 @@ void orderByFrequency(List * listFq) {
 	void * aux;
 	for (i = 0; i < length(listFq); i++){
 		for (n = 0; n < length(listFq) -1; n++) {
-			if(getFrequency(getValue(listFq,n)).frequency < getFrequency(getValue(listFq,n+1)).frequency) {
+			if(getFrequency(getValue(listFq,n)).frequency >= getFrequency(getValue(listFq,n+1)).frequency) {
 				aux = getValue(listFq,n);
 				setItem(listFq, n, getValue(listFq,n+1));
 				setItem(listFq,n+1, aux);
